@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YT Video Downloader</title>
+    <style>
+      body { font-family: Arial, sans-serif; }
+      #container { text-align: center; margin-top: 50px; }
+      input, select { margin: 10px; padding: 10px; }
+      button { padding: 10px 20px; }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h1>YouTube Video Downloader</h1>
+      <input id="youtubeUrl" type="text" placeholder="Enter YouTube URL" style="width: 80%;" />
+      
+      <!-- Quality Selection Dropdown -->
+      <select id="videoQuality">
+        <option value="360">360p</option>
+        <option value="480">480p</option>
+        <option value="720">720p</option>
+        <option value="1080">1080p</option>
+      </select>
+      
+      <button id="downloadBtn">Download Video</button>
+      <div id="status"></div>
+    </div>
+
+    <script>
+      const { ipcRenderer } = require('electron');
+
+      document.getElementById('downloadBtn').addEventListener('click', () => {
+        const url = document.getElementById('youtubeUrl').value;
+        const quality = document.getElementById('videoQuality').value;
+
+        ipcRenderer.send('download-video', { url, quality });
+      });
+
+      ipcRenderer.on('download-status', (event, message) => {
+        document.getElementById('status').innerText = message;
+      });
+    </script>
+  </body>
+</html>
